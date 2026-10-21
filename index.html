@@ -26,16 +26,6 @@
   </header>
 
   <main>
-    <!-- Empty state -->
-    <section class="empty card" id="emptyState" hidden>
-      <h2>No games yet</h2>
-      <p>Add players in Settings, then log your first score. Or load demo data to see the dashboard.</p>
-      <div class="row-btns">
-        <button class="btn primary" id="emptyAdd">+ Add score</button>
-        <button class="btn" id="demoBtn">Load demo data</button>
-      </div>
-    </section>
-
     <div id="dash">
       <!-- Range filter -->
       <div class="filters">
@@ -47,6 +37,15 @@
         </div>
         <span class="range-note" id="rangeNote"></span>
       </div>
+
+      <!-- Podium -->
+      <section class="card podium-card">
+        <div class="card-head">
+          <h2>Standings</h2>
+          <span class="muted small" id="podiumNote"></span>
+        </div>
+        <div class="podium" id="podium"></div>
+      </section>
 
       <!-- KPI tiles -->
       <section class="kpis" id="kpis"></section>
@@ -121,6 +120,15 @@
         <button class="btn ghost small" id="moreLog" hidden>Show more</button>
       </section>
     </div>
+    <!-- Empty state -->
+    <section class="empty card" id="emptyState" hidden>
+      <h2>No games yet</h2>
+      <p id="emptyMsg">Add players in Settings, then log your first score. Or load demo data to see the dashboard.</p>
+      <div class="row-btns">
+        <button class="btn primary" id="emptyAdd">+ Add score</button>
+        <button class="btn" id="demoBtn">Load demo data</button>
+      </div>
+    </section>
   </main>
 
   <footer class="foot">

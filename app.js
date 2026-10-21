@@ -48,7 +48,7 @@ function toast(msg) {
 /* ---------- state ---------- */
 let data = emptyData();
 let repoUpdatedAt = null;
-let range = store.get(LS_RANGE, '30');
+let range = store.get(LS_RANGE, 'all');
 let logLimit = 15;
 const charts = {};
 
@@ -153,14 +153,22 @@ function avgFor(pid, a, b) {
 /* ---------- render ---------- */
 function render() {
   const has = data.games.length > 0;
+  const hasPlayers = data.players.length > 0;
   $('#emptyState').hidden = has;
-  $('#dash').hidden = !has;
+  $('#dash').hidden = !hasPlayers;
+  $('#dash').classList.toggle('only-podium', !has);
+  $('#emptyMsg').textContent = hasPlayers
+    ? 'Hit + Add score after today’s round.'
+    : 'Add players in Settings, then log your first score. Or load demo data to see the dashboard.';
+  $('#demoBtn').hidden = hasPlayers;
   renderBadge();
   document.querySelectorAll('#rangeSeg button').forEach(b => b.setAttribute('aria-selected', b.dataset.range === range));
-  if (!has) return;
+  if (!hasPlayers) return;
   const { start, end } = rangeBounds();
-  $('#rangeNote').textContent = `${prettyDate(start)} – ${prettyDate(end)}`;
+  $('#rangeNote').textContent = has ? `${prettyDate(start)} – ${prettyDate(end)}` : '';
   const games = gamesIn(start, end);
+  renderPodium(games);
+  if (!has) return;
   renderKpis();
   renderLeaderboard(games);
   renderDaily(start, end);
@@ -172,6 +180,31 @@ function render() {
   renderHeat();
   renderRecords();
   renderLog();
+}
+
+function renderPodium(games) {
+  const label = { 7: 'Last 7 days', 30: 'Last 30 days', 90: 'Last 90 days', all: 'All time' }[range];
+  $('#podiumNote').textContent = `${label} · total points`;
+  const rows = playerStats(games).sort((a, b) => b.total - a.total || b.avg - a.avg || data.players.indexOf(a.p) - data.players.indexOf(b.p)).slice(0, 3);
+  const medals = ['🥇', '🥈', '🥉'];
+  const leader = rows[0]?.total || 0;
+  const html = [0, 1, 2].map(i => {
+    const r = rows[i];
+    if (!r) return `<div class="pod p${i + 1} empty"><div class="medal">${medals[i]}</div><div class="avatar">?</div><div class="pn muted">Open spot</div><div class="pts">–</div><div class="step">${i + 1}</div></div>`;
+    const c = playerColor(r.p.id);
+    const gap = !r.games ? 'No games yet'
+      : i === 0 ? (rows[1] && rows[1].total < r.total ? `+${fmt(r.total - rows[1].total)} lead` : rows[1] ? 'Tied' : 'Leader')
+      : (leader - r.total ? `${fmt(leader - r.total)} back` : 'Tied for 1st');
+    return `<div class="pod p${i + 1}">
+      <div class="medal">${medals[i]}</div>
+      <div class="avatar" style="background:${c};--ring:${c}">${esc(r.p.name.trim()[0]?.toUpperCase() || '?')}</div>
+      <div class="pn">${esc(r.p.name)}</div>
+      <div class="pts">${fmt(r.total)}<small>pts</small></div>
+      <div class="pmeta">${r.games ? `${fmt(r.avg)} avg · ${r.games} games · ${r.wins} wins` : '&nbsp;'}</div>
+      <div class="gap">${gap}</div>
+      <div class="step">${i + 1}</div></div>`;
+  }).join('');
+  $('#podium').innerHTML = html;
 }
 
 function renderBadge() {
@@ -605,7 +638,7 @@ async function ghPull() {
 /* ---------- demo data ---------- */
 function demoData() {
   let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-  const names = [['Pedro', 0.80], ['Bryan', 0.74], ['Michael', 0.70], ['Justin', 0.66]];
+  const names = [['Pedro', 0.78], ['Kaner', 0.74], ['Mitchell', 0.70]];
   const players = names.map(([name]) => ({ id: uid(), name }));
   const today = todayET(); const games = [];
   for (let d = 120; d >= 0; d--) {
@@ -613,7 +646,7 @@ function demoData() {
     const hard = rnd() * 0.25; // day difficulty, shared by everyone
     players.forEach((p, i) => {
       if (rnd() < 0.12) return; // skipped a day
-      const skill = names[i][1] + (i === 2 ? (120 - d) / 900 : 0); // Michael improves over time
+      const skill = names[i][1] + (i === 2 ? (120 - d) / 900 : 0); // Mitchell improves over time
       const q = WEIGHTS.map((_, qi) => {
         const r = rnd();
         if (r < 0.03) return 0;

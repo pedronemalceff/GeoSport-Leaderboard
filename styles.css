@@ -268,3 +268,64 @@ input:focus, textarea:focus, .sel:focus { outline: 2px solid color-mix(in srgb, 
   .gh-grid, .field-row { grid-template-columns: 1fr; }
   .chart-box { height: 240px; }
 }
+
+/* ---------- Podium ---------- */
+.podium-card {
+  --gold: #e3b341; --gold-2: #b8862b;
+  --silver: #c9ced6; --silver-2: #8e96a3;
+  --bronze: #d08b55; --bronze-2: #9a5b2e;
+  padding-bottom: 0; overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 60%),
+    var(--surface);
+}
+.podium {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end;
+  gap: 10px; max-width: 760px; margin: 8px auto 0; padding: 0 8px;
+}
+.pod { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.pod.p1 { order: 2; } .pod.p2 { order: 1; } .pod.p3 { order: 3; }
+.pod .medal { font-size: 30px; line-height: 1; margin-bottom: 6px; }
+.pod.p1 .medal { font-size: 40px; }
+.pod .avatar {
+  width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+  font-weight: 750; font-size: 24px; color: #fff; position: relative;
+  box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px var(--ring, var(--border));
+}
+.pod.p1 .avatar { width: 84px; height: 84px; font-size: 32px; }
+.pod .pn { font-weight: 700; font-size: 17px; margin-top: 12px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pod.p1 .pn { font-size: 21px; }
+.pod .pts { font-size: 26px; font-weight: 750; letter-spacing: -0.02em; margin-top: 2px; }
+.pod.p1 .pts { font-size: 34px; }
+.pod .pts small { font-size: 12px; font-weight: 600; color: var(--muted); margin-left: 3px; letter-spacing: 0; }
+.pod .pmeta { font-size: 12.5px; color: var(--muted); margin-top: 1px; text-align: center; }
+.pod .gap { font-size: 12px; font-weight: 600; color: var(--ink-2); background: var(--surface-2); border-radius: 99px; padding: 2px 9px; margin-top: 6px; }
+.pod .step {
+  width: 100%; margin-top: 14px; border-radius: 12px 12px 0 0; position: relative;
+  display: flex; align-items: flex-start; justify-content: center; padding-top: 14px;
+  font-size: 44px; font-weight: 800; color: rgba(255,255,255,.92); text-shadow: 0 2px 0 rgba(0,0,0,.15);
+  height: var(--h); transform-origin: bottom; animation: rise .7s cubic-bezier(.2,.8,.2,1) both;
+}
+.pod.p1 .step { --h: 190px; background: linear-gradient(180deg, var(--gold), var(--gold-2)); animation-delay: .25s; }
+.pod.p2 .step { --h: 135px; background: linear-gradient(180deg, var(--silver), var(--silver-2)); animation-delay: .1s; }
+.pod.p3 .step { --h: 95px;  background: linear-gradient(180deg, var(--bronze), var(--bronze-2)); animation-delay: 0s; }
+.pod .step::before {
+  content: ''; position: absolute; inset: 0 0 auto 0; height: 8px; border-radius: 12px 12px 0 0;
+  background: rgba(255,255,255,.28);
+}
+.pod.empty .avatar { background: var(--surface-2) !important; color: var(--muted); }
+@keyframes rise { from { transform: scaleY(0); opacity: 0; } to { transform: scaleY(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .pod .step { animation: none; } }
+@media (max-width: 560px) {
+  .podium { gap: 6px; padding: 0; }
+  .pod .avatar { width: 48px; height: 48px; font-size: 19px; }
+  .pod.p1 .avatar { width: 62px; height: 62px; font-size: 24px; }
+  .pod .pn { font-size: 14px; } .pod.p1 .pn { font-size: 16px; }
+  .pod .pts { font-size: 19px; } .pod.p1 .pts { font-size: 24px; }
+  .pod .pts small { display: none; }
+  .pod .medal { font-size: 24px; } .pod.p1 .medal { font-size: 30px; }
+  .pod.p1 .step { --h: 150px; } .pod.p2 .step { --h: 105px; } .pod.p3 .step { --h: 75px; }
+  .pod .step { font-size: 32px; }
+}
+#dash.only-podium > :not(.filters):not(.podium-card) { display: none; }
+#dash.only-podium .filters { display: none; }
