@@ -61,7 +61,7 @@ function normalize(d) {
   const ids = new Set(out.players.map(p => p.id));
   out.games = (d.games || [])
     .filter(g => g && ids.has(g.player) && /^\d{4}-\d{2}-\d{2}$/.test(g.date) && Array.isArray(g.q) && g.q.length === 5)
-    .map(g => ({ id: g.id || uid(), date: g.date, player: g.player, q: g.q.map(v => Math.max(0, Math.min(100, Math.round(Number(v) || 0)))) }));
+    .map(g => ({ id: g.id || uid(), date: g.date, player: g.player, q: g.q.map(v => Math.max(0, Math.min(100, Math.round(Number(v) || 0)))), ...(g.demo ? { demo: true } : {}) }));
   return out;
 }
 function save({ push = true } = {}) {
@@ -160,7 +160,7 @@ function render() {
   $('#emptyMsg').textContent = hasPlayers
     ? 'Hit + Add score after today’s round.'
     : 'Add players in Settings, then log your first score. Or load demo data to see the dashboard.';
-  $('#demoBtn').hidden = hasPlayers;
+  $('#demoBanner').hidden = !data.games.some(g => g.demo);
   renderBadge();
   document.querySelectorAll('#rangeSeg button').forEach(b => b.setAttribute('aria-selected', b.dataset.range === range));
   if (!hasPlayers) return;
@@ -540,10 +540,14 @@ function submitScore(e) {
   if (q.some(v => v == null)) { msg.textContent = 'Enter all 5 base scores (0–100).'; msg.className = 'form-msg err'; return; }
   const player = $('#fPlayer').value, date = $('#fDate').value;
   if (!date) { msg.textContent = 'Pick a date.'; msg.className = 'form-msg err'; return; }
+  let clearedDemo = false;
+  if (data.games.some(g => g.demo) && !(editingId && data.games.find(g => g.id === editingId)?.demo)) {
+    data.games = data.games.filter(g => !g.demo); clearedDemo = true; editingId = null;
+  }
   const dup = data.games.find(g => g.player === player && g.date === date && g.id !== editingId);
   if (editingId) {
     const g = data.games.find(x => x.id === editingId);
-    Object.assign(g, { player, date, q });
+    Object.assign(g, { player, date, q }); delete g.demo;
     if (dup) data.games = data.games.filter(x => x !== dup);
   } else if (dup) {
     dup.q = q;
@@ -553,7 +557,7 @@ function submitScore(e) {
   store.set('gst-last-player', player);
   $('#addDlg').close();
   save();
-  toast(`${dup && !editingId ? 'Updated' : 'Saved'} ${playerById(player).name}: ${fmt(dayTotal(q))} pts`);
+  toast(`${dup && !editingId ? 'Updated' : 'Saved'} ${playerById(player).name}: ${fmt(dayTotal(q))} pts${clearedDemo ? ' · demo data cleared' : ''}`);
 }
 
 /* ---------- settings ---------- */
@@ -639,24 +643,24 @@ async function ghPull() {
 function demoData() {
   let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
   const names = [['Pedro', 0.78], ['Kaner', 0.74], ['Mitchell', 0.70]];
-  const players = names.map(([name]) => ({ id: uid(), name }));
+  const players = data.players.length ? data.players.slice(0, 3) : names.map(([name]) => ({ id: uid(), name }));
   const today = todayET(); const games = [];
   for (let d = 120; d >= 0; d--) {
     const date = addDays(today, -d);
     const hard = rnd() * 0.25; // day difficulty, shared by everyone
     players.forEach((p, i) => {
       if (rnd() < 0.12) return; // skipped a day
-      const skill = names[i][1] + (i === 2 ? (120 - d) / 900 : 0); // Mitchell improves over time
+      const skill = (names[i] || names[2])[1] + (i === 2 ? (120 - d) / 900 : 0); // Mitchell improves over time
       const q = WEIGHTS.map((_, qi) => {
         const r = rnd();
         if (r < 0.03) return 0;
         const v = 100 * Math.pow(Math.min(1, Math.max(0, skill - hard - qi * 0.03 + (rnd() - 0.5) * 0.55)), 0.75);
         return v > 97 ? 100 : Math.round(v);
       });
-      games.push({ id: uid(), date, player: p.id, q });
+      games.push({ id: uid(), date, player: p.id, q, demo: true });
     });
   }
-  return { version: 1, updatedAt: new Date().toISOString(), players, games };
+  return { version: 1, updatedAt: new Date().toISOString(), players: data.players.length ? data.players : players, games: [...data.games.filter(g => !g.demo), ...games] };
 }
 
 /* ---------- theme ---------- */
@@ -679,6 +683,9 @@ function init() {
   $('#emptyAdd').onclick = () => openAdd();
   $('#settingsBtn').onclick = openSettings;
   $('#themeBtn').onclick = toggleTheme;
+  const removeDemo = () => { data.games = data.games.filter(g => !g.demo); save(); toast('Demo data removed'); };
+  $('#removeDemo').onclick = removeDemo;
+  $('#removeDemo2').onclick = removeDemo;
   $('#demoBtn').onclick = () => { data = demoData(); save({ push: false }); toast('Demo data loaded. Clear it in Settings.'); };
   $('#rangeSeg').onclick = e => { const r = e.target.dataset.range; if (r) { range = r; store.set(LS_RANGE, r); render(); } };
   $('#rollToggle').onchange = () => { const { start, end } = rangeBounds(); renderDaily(start, end); };

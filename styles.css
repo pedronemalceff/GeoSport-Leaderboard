@@ -329,3 +329,9 @@ input:focus, textarea:focus, .sel:focus { outline: 2px solid color-mix(in srgb, 
 }
 #dash.only-podium > :not(.filters):not(.podium-card) { display: none; }
 #dash.only-podium .filters { display: none; }
+.demo-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  background: color-mix(in srgb, #eda100 14%, var(--surface)); border: 1px solid color-mix(in srgb, #eda100 40%, transparent);
+  color: var(--ink); border-radius: 12px; padding: 10px 14px; font-size: 13.5px;
+}
+.demo-banner .btn { padding: 5px 12px; font-size: 12.5px; }

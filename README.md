@@ -20,6 +20,10 @@ Tap tiers: 100 is Perfect, 90–99 Great, 50–89 Ballpark, 1–49 Miles off, an
 2. **+ Add score.** Pick the player and date, then type the five base scores. You can also paste text containing them, and the numbers are pulled out automatically. Press Enter to jump between fields. Saving again for the same player and date replaces that entry.
 3. Use the **1W / 1M / 3M / All** filter to change the window for the charts and leaderboard.
 
+## Admin vs viewers
+
+By default the site is read-only. To unlock editing in your own browser, open `…/GeoSport-Leaderboard/#admin` once and paste a [fine-grained token](https://github.com/settings/personal-access-tokens/new) scoped to this repo with *Contents: Read and write*. That browser can then add and edit scores, and every save is committed to `data/scores.json`. Everyone else only sees the repo copy. Use **Settings → Lock this browser** to remove the token.
+
 ## Where the data lives
 
 - Your working copy is saved in your browser (localStorage).

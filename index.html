@@ -38,6 +38,11 @@
         <span class="range-note" id="rangeNote"></span>
       </div>
 
+      <div class="demo-banner" id="demoBanner" hidden>
+        <span><b>Demo data</b> · these are fake scores. They clear automatically when you log your first real score.</span>
+        <button class="btn small-btn" id="removeDemo" type="button">Remove now</button>
+      </div>
+
       <!-- Podium -->
       <section class="card podium-card">
         <div class="card-head">
@@ -189,6 +194,7 @@
         <button class="btn" type="button" id="exportBtn">Export JSON</button>
         <label class="btn file">Import JSON<input type="file" id="importFile" accept="application/json" hidden></label>
         <button class="btn" type="button" id="reloadRepo">Reload from repo file</button>
+        <button class="btn" type="button" id="removeDemo2">Remove demo scores</button>
         <button class="btn danger" type="button" id="clearBtn">Clear all</button>
       </div>
 
