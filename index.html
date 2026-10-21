@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GeoSport Tracker</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌎</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="globe" aria-hidden="true">🌎</span>
+      <div>
+        <h1>GeoSport Tracker</h1>
+        <p class="sub" id="subline">Daily scores, all-time bragging rights</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <span class="sync-badge" id="syncBadge" hidden></span>
+      <button class="btn ghost" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      <button class="btn ghost" id="settingsBtn">Settings</button>
+      <button class="btn primary" id="addBtn">+ Add score</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Empty state -->
+    <section class="empty card" id="emptyState" hidden>
+      <h2>No games yet</h2>
+      <p>Add players in Settings, then log your first score. Or load demo data to see the dashboard.</p>
+      <div class="row-btns">
+        <button class="btn primary" id="emptyAdd">+ Add score</button>
+        <button class="btn" id="demoBtn">Load demo data</button>
+      </div>
+    </section>
+
+    <div id="dash">
+      <!-- Range filter -->
+      <div class="filters">
+        <div class="seg" role="tablist" id="rangeSeg">
+          <button data-range="7" role="tab">1W</button>
+          <button data-range="30" role="tab">1M</button>
+          <button data-range="90" role="tab">3M</button>
+          <button data-range="all" role="tab">All</button>
+        </div>
+        <span class="range-note" id="rangeNote"></span>
+      </div>
+
+      <!-- KPI tiles -->
+      <section class="kpis" id="kpis"></section>
+
+      <!-- Leaderboard -->
+      <section class="card">
+        <div class="card-head">
+          <h2>Leaderboard</h2>
+          <span class="muted small" id="lbNote"></span>
+        </div>
+        <div class="table-wrap">
+          <table class="lb" id="leaderboard"></table>
+        </div>
+      </section>
+
+      <div class="grid-2">
+        <section class="card">
+          <div class="card-head">
+            <h2>Daily scores</h2>
+            <label class="toggle"><input type="checkbox" id="rollToggle"> 7-day avg</label>
+          </div>
+          <div class="chart-box"><canvas id="dailyChart"></canvas></div>
+        </section>
+        <section class="card">
+          <div class="card-head"><h2>Points race</h2><span class="muted small">Cumulative total</span></div>
+          <div class="chart-box"><canvas id="raceChart"></canvas></div>
+        </section>
+      </div>
+
+      <div class="grid-2">
+        <section class="card">
+          <div class="card-head"><h2>Avg by question</h2><span class="muted small">Base score 0–100, before multiplier</span></div>
+          <div class="chart-box"><canvas id="qChart"></canvas></div>
+        </section>
+        <section class="card">
+          <div class="card-head"><h2>Tap quality</h2><span class="muted small">Share of taps by tier</span></div>
+          <div class="tiers" id="tierBars"></div>
+        </section>
+      </div>
+
+      <div class="grid-2">
+        <section class="card">
+          <div class="card-head"><h2>Daily wins</h2><span class="muted small">Days with 2+ players</span></div>
+          <div class="chart-box short"><canvas id="winsChart"></canvas></div>
+        </section>
+        <section class="card">
+          <div class="card-head"><h2>Head to head</h2><span class="muted small">Row player's record vs column</span></div>
+          <div class="table-wrap"><table class="h2h" id="h2h"></table></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Calendar</h2>
+          <select id="heatPlayer" class="sel"></select>
+        </div>
+        <div class="heat-wrap"><div class="heat" id="heat"></div></div>
+        <div class="heat-legend" id="heatLegend"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>Records</h2><span class="muted small">All time</span></div>
+        <div class="records" id="records"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Game log</h2>
+          <select id="logPlayer" class="sel"></select>
+        </div>
+        <div class="table-wrap"><table class="log" id="log"></table></div>
+        <button class="btn ghost small" id="moreLog" hidden>Show more</button>
+      </section>
+    </div>
+  </main>
+
+  <footer class="foot">
+    Scoring per <a href="https://geosports.app/how-it-works" target="_blank" rel="noopener">geosports.app</a>:
+    Q1–Q2 ×1, Q3 ×2, Q4–Q5 ×3 · max 1,000/day
+  </footer>
+
+  <!-- Add score dialog -->
+  <dialog id="addDlg" class="dlg">
+    <form method="dialog" id="addForm">
+      <div class="dlg-head">
+        <h2 id="addTitle">Add score</h2>
+        <button class="btn ghost icon" value="cancel" aria-label="Close">✕</button>
+      </div>
+      <div class="field-row">
+        <label>Player
+          <select id="fPlayer" class="sel" required></select>
+        </label>
+        <label>Date
+          <input type="date" id="fDate" required>
+        </label>
+      </div>
+      <label class="paste">Paste share text or scores (optional)
+        <textarea id="fPaste" rows="2" placeholder="e.g. 100 92 64 88 41  — numbers are pulled out automatically"></textarea>
+      </label>
+      <div class="qgrid" id="qInputs"></div>
+      <div class="total-row">
+        <span>Total</span>
+        <strong id="fTotal">0</strong>
+        <span class="muted">/ 1,000</span>
+      </div>
+      <p class="form-msg" id="formMsg"></p>
+      <div class="dlg-foot">
+        <button class="btn" value="cancel">Cancel</button>
+        <button class="btn primary" id="saveScore" value="default">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Settings dialog -->
+  <dialog id="setDlg" class="dlg wide">
+    <form method="dialog">
+      <div class="dlg-head">
+        <h2>Settings</h2>
+        <button class="btn ghost icon" value="cancel" aria-label="Close">✕</button>
+      </div>
+
+      <h3>Players</h3>
+      <ul class="players" id="playerList"></ul>
+      <div class="inline">
+        <input type="text" id="newPlayer" placeholder="Add a player name" maxlength="20">
+        <button class="btn" type="button" id="addPlayer">Add</button>
+      </div>
+
+      <h3>Data</h3>
+      <p class="muted small">Scores save in this browser. Export the JSON and commit it as <code>data/scores.json</code>, or set up GitHub sync below so it commits for you.</p>
+      <div class="row-btns">
+        <button class="btn" type="button" id="exportBtn">Export JSON</button>
+        <label class="btn file">Import JSON<input type="file" id="importFile" accept="application/json" hidden></label>
+        <button class="btn" type="button" id="reloadRepo">Reload from repo file</button>
+        <button class="btn danger" type="button" id="clearBtn">Clear all</button>
+      </div>
+
+      <h3>GitHub sync <span class="muted small">(optional)</span></h3>
+      <p class="muted small">Use a fine-grained token with <b>Contents: Read and write</b> on this repo only. It's stored in this browser only.</p>
+      <div class="gh-grid">
+        <label>Owner<input type="text" id="ghOwner" placeholder="your-username"></label>
+        <label>Repo<input type="text" id="ghRepo" placeholder="geosport-tracker"></label>
+        <label>Branch<input type="text" id="ghBranch" placeholder="main"></label>
+        <label>Token<input type="password" id="ghToken" placeholder="github_pat_…" autocomplete="off"></label>
+      </div>
+      <div class="row-btns">
+        <button class="btn" type="button" id="ghSave">Save sync settings</button>
+        <button class="btn primary" type="button" id="ghPush">Push to repo</button>
+        <button class="btn" type="button" id="ghPull">Pull from repo</button>
+        <label class="toggle"><input type="checkbox" id="ghAuto"> Auto-push after each save</label>
+      </div>
+      <p class="form-msg" id="ghMsg"></p>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
