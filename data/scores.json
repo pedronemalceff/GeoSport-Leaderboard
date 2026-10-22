@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-22T18:19:33.284Z",
+  "updatedAt": "2026-10-22T18:20:27.962Z",
   "players": [
     {
       "id": "pedro",
@@ -15,5 +15,12 @@
       "name": "Mitchell"
     }
   ],
-  "games": []
+  "games": [
+    {
+      "id": "ikjunjcm",
+      "date": "2026-07-07",
+      "player": "pedro",
+      "total": 873
+    }
+  ]
 }
