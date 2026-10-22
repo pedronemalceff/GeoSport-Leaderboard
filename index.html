@@ -21,6 +21,7 @@
       <span class="sync-badge admin-only" id="syncBadge" hidden></span>
       <button class="btn ghost" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
       <button class="btn ghost admin-only" id="settingsBtn">Settings</button>
+      <button class="btn admin-only" id="bulkBtn">Bulk add</button>
       <button class="btn primary admin-only" id="addBtn">+ Add score</button>
     </div>
   </header>
@@ -82,7 +83,7 @@
 
       <div class="grid-2">
         <section class="card">
-          <div class="card-head"><h2>Avg by question</h2><span class="muted small">Base score 0–100, before multiplier</span></div>
+          <div class="card-head"><h2>Avg by question</h2><span class="muted small" id="qNote">Base score 0–100, before multiplier</span></div>
           <div class="chart-box"><canvas id="qChart"></canvas></div>
         </section>
         <section class="card">
@@ -156,6 +157,17 @@
           <input type="date" id="fDate" required>
         </label>
       </div>
+      <div class="seg mode-seg" id="modeSeg" role="tablist">
+        <button type="button" data-mode="q">Per question</button>
+        <button type="button" data-mode="total">Total only</button>
+      </div>
+      <div id="totalMode" hidden>
+        <label>Total score (0–1,000)
+          <input type="number" id="fTotalIn" min="0" max="1000" inputmode="numeric" placeholder="e.g. 742">
+        </label>
+        <p class="muted small" style="margin:6px 0 0">Use this for old games where you only have the total. They count everywhere except the per-question and tap-quality charts.</p>
+      </div>
+      <div id="qMode">
       <label class="paste">Paste share text or scores (optional)
         <textarea id="fPaste" rows="2" placeholder="e.g. 100 92 64 88 41  — numbers are pulled out automatically"></textarea>
       </label>
@@ -164,6 +176,7 @@
         <span>Total</span>
         <strong id="fTotal">0</strong>
         <span class="muted">/ 1,000</span>
+      </div>
       </div>
       <p class="form-msg" id="formMsg"></p>
       <div class="dlg-foot">
@@ -211,6 +224,7 @@
       <h3>Data</h3>
       <p class="muted small">With auto-push on, every save commits <code>data/scores.json</code> and the live site updates in about a minute. Export is a manual backup.</p>
       <div class="row-btns">
+        <button class="btn" type="button" id="bulkBtn2">Bulk add totals</button>
         <button class="btn" type="button" id="exportBtn">Export JSON</button>
         <label class="btn file">Import JSON<input type="file" id="importFile" accept="application/json" hidden></label>
         <button class="btn" type="button" id="reloadRepo">Reload from repo file</button>
@@ -219,6 +233,24 @@
       </div>
       </div>
 
+    </form>
+  </dialog>
+
+  <!-- Bulk add dialog -->
+  <dialog id="bulkDlg" class="dlg wide">
+    <form method="dialog">
+      <div class="dlg-head">
+        <h2>Bulk add totals</h2>
+        <button class="btn ghost icon" value="cancel" aria-label="Close">✕</button>
+      </div>
+      <p class="muted small" style="margin-top:0">Type one day per line from your texts. Dates like <code>10/14</code> or <code>2026-10-14</code>. Names can be shortened (<code>P</code>, <code>Kan</code>). A date on its own line applies to the lines under it.</p>
+      <textarea id="bulkText" rows="7" spellcheck="false" placeholder="10/14 Pedro 712 Kaner 650 Mitchell 801&#10;10/15 P 688, K 701, M 655&#10;10/16&#10;Pedro 590&#10;Mitchell 812"></textarea>
+      <div class="bulk-preview" id="bulkPreview"></div>
+      <p class="form-msg err" id="bulkMsg"></p>
+      <div class="dlg-foot">
+        <button class="btn" value="cancel">Cancel</button>
+        <button class="btn primary" type="button" id="bulkImport" disabled>Import</button>
+      </div>
     </form>
   </dialog>
 

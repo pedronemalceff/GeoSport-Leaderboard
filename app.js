@@ -39,6 +39,7 @@ function prettyDate(d, opts = { month: 'short', day: 'numeric' }) {
   return new Date(d + 'T12:00:00Z').toLocaleDateString(undefined, { ...opts, timeZone: 'UTC' });
 }
 const dayTotal = q => q.reduce((s, v, i) => s + (Number(v) || 0) * WEIGHTS[i], 0);
+const gTotal = g => (g.q ? dayTotal(g.q) : g.total || 0);
 const tierOf = s => TIERS.find(t => t.test(s)) || TIERS[4];
 function toast(msg) {
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
@@ -60,8 +61,14 @@ function normalize(d) {
   out.players = (d.players || []).filter(p => p && p.id && p.name).map(p => ({ id: String(p.id), name: String(p.name) }));
   const ids = new Set(out.players.map(p => p.id));
   out.games = (d.games || [])
-    .filter(g => g && ids.has(g.player) && /^\d{4}-\d{2}-\d{2}$/.test(g.date) && Array.isArray(g.q) && g.q.length === 5)
-    .map(g => ({ id: g.id || uid(), date: g.date, player: g.player, q: g.q.map(v => Math.max(0, Math.min(100, Math.round(Number(v) || 0)))), ...(g.demo ? { demo: true } : {}) }));
+    .filter(g => g && ids.has(g.player) && /^\d{4}-\d{2}-\d{2}$/.test(g.date) && ((Array.isArray(g.q) && g.q.length === 5) || Number.isFinite(Number(g.total))))
+    .map(g => {
+      const base = { id: g.id || uid(), date: g.date, player: g.player };
+      if (Array.isArray(g.q) && g.q.length === 5) base.q = g.q.map(v => Math.max(0, Math.min(100, Math.round(Number(v) || 0))));
+      else base.total = Math.max(0, Math.min(MAX_DAY, Math.round(Number(g.total))));
+      if (g.demo) base.demo = true;
+      return base;
+    });
   return out;
 }
 function save({ push = true } = {}) {
@@ -139,8 +146,8 @@ function dailyWinners(games) {
   Object.values(byDate).forEach(list => {
     if (list.length < 2) return;
     contested++;
-    const top = Math.max(...list.map(g => dayTotal(g.q)));
-    list.filter(g => dayTotal(g.q) === top).forEach(g => (wins[g.player] = (wins[g.player] || 0) + 1));
+    const top = Math.max(...list.map(g => gTotal(g)));
+    list.filter(g => gTotal(g) === top).forEach(g => (wins[g.player] = (wins[g.player] || 0) + 1));
   });
   return { wins, contested };
 }
@@ -149,8 +156,8 @@ function playerStats(games) {
   const { wins } = dailyWinners(games);
   return data.players.map(p => {
     const gs = games.filter(g => g.player === p.id);
-    const totals = gs.map(g => dayTotal(g.q));
-    const taps = gs.flatMap(g => g.q);
+    const totals = gs.map(g => gTotal(g));
+    const taps = gs.flatMap(g => g.q || []);
     return {
       p, games: gs.length,
       total: totals.reduce((a, b) => a + b, 0),
@@ -163,7 +170,7 @@ function playerStats(games) {
 }
 function avgFor(pid, a, b) {
   const gs = gamesIn(a, b).filter(g => g.player === pid);
-  return gs.length ? gs.reduce((s, g) => s + dayTotal(g.q), 0) / gs.length : null;
+  return gs.length ? gs.reduce((s, g) => s + gTotal(g), 0) / gs.length : null;
 }
 
 /* ---------- render ---------- */
@@ -256,7 +263,7 @@ function renderKpis() {
     return tile(label, `${who(r)}`, `${fmt(r.cur)} avg · ${deltaHtml(r.cur, r.prev)}`);
   };
 
-  const todays = data.games.filter(g => g.date === today).map(g => ({ g, t: dayTotal(g.q) })).sort((a, b) => b.t - a.t);
+  const todays = data.games.filter(g => g.date === today).map(g => ({ g, t: gTotal(g) })).sort((a, b) => b.t - a.t);
   const todayTile = todays.length
     ? tile("Today's best", `${who({ p: playerById(todays[0].g.player) })}`, `${fmt(todays[0].t)} pts · ${todays.length} of ${data.players.length} played`)
     : tile("Today's best", '—', 'No scores yet today');
@@ -283,7 +290,7 @@ function renderLeaderboard(games) {
       trend = Math.abs(d) < 0.5 ? '<span class="muted">→</span>' : `<span class="${d > 0 ? 'delta-up' : 'delta-down'}">${d > 0 ? '▲' : '▼'} ${fmt(Math.abs(d))}</span>`;
     }
     const last5 = data.games.filter(g => g.player === r.p.id).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5).reverse()
-      .map(g => { const t = dayTotal(g.q); return `<span class="dot" title="${prettyDate(g.date)}: ${t}" style="background:${css(tierOf(Math.round(t / 10)).var)}"></span>`; }).join('');
+      .map(g => { const t = gTotal(g); return `<span class="dot" title="${prettyDate(g.date)}: ${t}" style="background:${css(tierOf(Math.round(t / 10)).var)}"></span>`; }).join('');
     const st = streaks(r.p.id);
     const color = playerColor(r.p.id);
     return `<tr class="${i === 0 ? 'lead' : ''}">
@@ -330,7 +337,7 @@ function renderDaily(start, end) {
   const games = gamesIn(addDays(start, -6), end);
   const players = activePlayers(gamesIn(start, end));
   const datasets = players.map(p => {
-    const map = {}; games.filter(g => g.player === p.id).forEach(g => (map[g.date] = dayTotal(g.q)));
+    const map = {}; games.filter(g => g.player === p.id).forEach(g => (map[g.date] = gTotal(g)));
     const values = days.map(d => {
       if (!rolling) return map[d] ?? null;
       const win = dateRange(addDays(d, -6), d).map(x => map[x]).filter(v => v != null);
@@ -352,7 +359,7 @@ function renderRace(start, end) {
   const games = gamesIn(start, end);
   const players = activePlayers(games);
   const datasets = players.map(p => {
-    const map = {}; games.filter(g => g.player === p.id).forEach(g => (map[g.date] = dayTotal(g.q)));
+    const map = {}; games.filter(g => g.player === p.id).forEach(g => (map[g.date] = gTotal(g)));
     let acc = 0;
     const c = playerColor(p.id);
     return { label: p.name, data: days.map(d => (acc += map[d] || 0)), borderColor: c, backgroundColor: c, borderWidth: 2,
@@ -361,8 +368,10 @@ function renderRace(start, end) {
   mkChart('raceChart', { type: 'line', data: { labels: days.map(d => prettyDate(d)), datasets }, options: baseOpts() });
 }
 
-function renderQ(games) {
+function renderQ(allGames) {
+  const games = allGames.filter(g => g.q);
   const players = activePlayers(games);
+  $('#qNote').textContent = games.length < allGames.length ? `Games with question scores only (${games.length} of ${allGames.length})` : 'Base score 0–100, before multiplier';
   const datasets = players.map(p => {
     const gs = games.filter(g => g.player === p.id);
     const c = playerColor(p.id);
@@ -393,10 +402,12 @@ function renderWins(games) {
   });
 }
 
-function renderTiers(games) {
+function renderTiers(allGames) {
+  const games = allGames.filter(g => g.q);
   const players = activePlayers(games);
+  if (!players.length) { $('#tierBars').innerHTML = '<p class="muted small">No games with question scores in this range yet.</p>'; return; }
   const rows = players.map(p => {
-    const taps = games.filter(g => g.player === p.id).flatMap(g => g.q);
+    const taps = games.filter(g => g.player === p.id).flatMap(g => g.q || []);
     const counts = TIERS.map(t => taps.filter(t.test).length);
     const segs = TIERS.map((t, i) => counts[i]
       ? `<span style="width:${(counts[i] / taps.length) * 100}%;background:${css(t.var)}" title="${t.label}: ${counts[i]} (${Math.round((counts[i] / taps.length) * 100)}%)"></span>` : '').join('');
@@ -411,7 +422,7 @@ function renderTiers(games) {
 function renderH2H(games) {
   const players = activePlayers(games);
   if (players.length < 2) { $('#h2h').innerHTML = '<tbody><tr><td class="muted">Needs 2+ players</td></tr></tbody>'; return; }
-  const byDate = {}; games.forEach(g => ((byDate[g.date] ||= {})[g.player] = dayTotal(g.q)));
+  const byDate = {}; games.forEach(g => ((byDate[g.date] ||= {})[g.player] = gTotal(g)));
   const rec = (a, b) => {
     let w = 0, l = 0, t = 0;
     Object.values(byDate).forEach(d => { if (d[a] == null || d[b] == null) return; d[a] > d[b] ? w++ : d[a] < d[b] ? l++ : t++; });
@@ -437,7 +448,7 @@ function renderHeat() {
   sel.value = data.players.some(p => p.id === prev) ? prev : data.players[0]?.id;
   const pid = sel.value;
   const today = todayET();
-  const map = {}; data.games.filter(g => g.player === pid).forEach(g => (map[g.date] = dayTotal(g.q)));
+  const map = {}; data.games.filter(g => g.player === pid).forEach(g => (map[g.date] = gTotal(g)));
   // 26 weeks, columns start Sunday
   const dow = new Date(today + 'T00:00:00Z').getUTCDay();
   const start = addDays(today, -dow - 7 * 25);
@@ -463,7 +474,7 @@ function renderHeat() {
 }
 
 function renderRecords() {
-  const all = data.games.map(g => ({ g, t: dayTotal(g.q) }));
+  const all = data.games.map(g => ({ g, t: gTotal(g) }));
   const who = id => { const p = playerById(id); return `<span class="swatch" style="background:${playerColor(id)}"></span>${esc(p?.name || '?')}`; };
   const recs = [];
   const best = all.reduce((m, x) => (!m || x.t > m.t ? x : m), null);
@@ -480,7 +491,7 @@ function renderRecords() {
   // best rolling 7-day total
   let bw = null;
   data.players.forEach(p => {
-    const map = {}; data.games.filter(g => g.player === p.id).forEach(g => (map[g.date] = dayTotal(g.q)));
+    const map = {}; data.games.filter(g => g.player === p.id).forEach(g => (map[g.date] = gTotal(g)));
     Object.keys(map).forEach(endD => {
       const sum = dateRange(addDays(endD, -6), endD).reduce((s, d) => s + (map[d] || 0), 0);
       if (!bw || sum > bw.sum) bw = { sum, p, endD };
@@ -496,13 +507,13 @@ function renderLog() {
   sel.innerHTML = '<option value="">All players</option>' + data.players.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('');
   sel.value = prev && data.players.some(p => p.id === prev) ? prev : '';
   const list = data.games.filter(g => !sel.value || g.player === sel.value)
-    .sort((a, b) => b.date.localeCompare(a.date) || dayTotal(b.q) - dayTotal(a.q));
+    .sort((a, b) => b.date.localeCompare(a.date) || gTotal(b) - gTotal(a));
   const rows = list.slice(0, logLimit).map(g => `<tr data-id="${g.id}">
     <td>${prettyDate(g.date, { weekday: 'short', month: 'short', day: 'numeric' })}</td>
     <td style="text-align:left"><span class="pname"><span class="swatch" style="background:${playerColor(g.player)}"></span>${esc(playerById(g.player)?.name)}</span></td>
-    <td><span class="dots">${g.q.map((s, i) => `<span class="dot" title="Q${i + 1}: ${s}" style="background:${css(tierOf(s).var)}"></span>`).join('')}</span></td>
-    <td class="muted">${g.q.join(' · ')}</td>
-    <td><strong>${fmt(dayTotal(g.q))}</strong></td>
+    <td>${g.q ? `<span class="dots">${g.q.map((s, i) => `<span class="dot" title="Q${i + 1}: ${s}" style="background:${css(tierOf(s).var)}"></span>`).join('')}</span>` : '<span class="muted small">total only</span>'}</td>
+    <td class="muted">${g.q ? g.q.join(' · ') : '—'}</td>
+    <td><strong>${fmt(gTotal(g))}</strong></td>
     <td class="admin-only"><button class="btn ghost icon edit" title="Edit">✎</button><button class="btn ghost icon del" title="Delete">🗑</button></td></tr>`).join('');
   $('#log').innerHTML = `<thead><tr><th>Date</th><th style="text-align:left">Player</th><th>Taps</th><th>Base scores</th><th>Total</th><th class="admin-only"></th></tr></thead><tbody>${rows}</tbody>`;
   $('#moreLog').hidden = list.length <= logLimit;
@@ -536,11 +547,20 @@ function openAdd(game) {
   $('#fDate').value = game?.date || todayET();
   $('#fDate').max = todayET();
   $('#fPaste').value = '';
-  document.querySelectorAll('#qInputs input').forEach((inp, i) => (inp.value = game ? game.q[i] : ''));
+  document.querySelectorAll('#qInputs input').forEach((inp, i) => (inp.value = game?.q ? game.q[i] : ''));
+  $('#fTotalIn').value = game && !game.q ? game.total : '';
   $('#formMsg').textContent = ''; $('#formMsg').className = 'form-msg';
+  setEntryMode(game ? (game.q ? 'q' : 'total') : store.get('gst-entry-mode', 'q'));
   updateTotal();
   $('#addDlg').showModal();
-  setTimeout(() => document.querySelector('#qInputs input').focus(), 50);
+  setTimeout(() => (entryMode === 'q' ? document.querySelector('#qInputs input') : $('#fTotalIn')).focus(), 50);
+}
+let entryMode = 'q';
+function setEntryMode(m) {
+  entryMode = m;
+  document.querySelectorAll('#modeSeg button').forEach(b => b.setAttribute('aria-selected', b.dataset.mode === m));
+  $('#qMode').hidden = m !== 'q';
+  $('#totalMode').hidden = m !== 'total';
 }
 function parsePaste(text) {
   const nums = (text.match(/\d+/g) || []).map(Number);
@@ -552,9 +572,17 @@ function parsePaste(text) {
 }
 function submitScore(e) {
   e.preventDefault();
-  const q = readQ();
   const msg = $('#formMsg');
-  if (q.some(v => v == null)) { msg.textContent = 'Enter all 5 base scores (0–100).'; msg.className = 'form-msg err'; return; }
+  let rec;
+  if (entryMode === 'q') {
+    const q = readQ();
+    if (q.some(v => v == null)) { msg.textContent = 'Enter all 5 base scores (0–100).'; msg.className = 'form-msg err'; return; }
+    rec = { q };
+  } else {
+    const t = Number($('#fTotalIn').value);
+    if ($('#fTotalIn').value === '' || !Number.isFinite(t) || t < 0 || t > MAX_DAY) { msg.textContent = 'Enter a total between 0 and 1,000.'; msg.className = 'form-msg err'; return; }
+    rec = { total: Math.round(t) };
+  }
   const player = $('#fPlayer').value, date = $('#fDate').value;
   if (!date) { msg.textContent = 'Pick a date.'; msg.className = 'form-msg err'; return; }
   let clearedDemo = false;
@@ -564,17 +592,102 @@ function submitScore(e) {
   const dup = data.games.find(g => g.player === player && g.date === date && g.id !== editingId);
   if (editingId) {
     const g = data.games.find(x => x.id === editingId);
-    Object.assign(g, { player, date, q }); delete g.demo;
+    delete g.q; delete g.total; delete g.demo; Object.assign(g, { player, date, ...rec });
     if (dup) data.games = data.games.filter(x => x !== dup);
   } else if (dup) {
-    dup.q = q;
+    delete dup.q; delete dup.total; Object.assign(dup, rec);
   } else {
-    data.games.push({ id: uid(), date, player, q });
+    data.games.push({ id: uid(), date, player, ...rec });
   }
   store.set('gst-last-player', player);
+  store.set('gst-entry-mode', entryMode);
   $('#addDlg').close();
   save();
-  toast(`${dup && !editingId ? 'Updated' : 'Saved'} ${playerById(player).name}: ${fmt(dayTotal(q))} pts${clearedDemo ? ' · demo data cleared' : ''}`);
+  toast(`${dup && !editingId ? 'Updated' : 'Saved'} ${playerById(player).name}: ${fmt(gTotal(rec))} pts${clearedDemo ? ' · demo data cleared' : ''}`);
+}
+
+/* ---------- bulk add (totals from texts) ---------- */
+function parseDateToken(tok) {
+  const today = todayET();
+  let m = tok.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (m) return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+  m = tok.match(/^(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{2,4}))?$/);
+  if (!m) return null;
+  const mo = +m[1], d = +m[2];
+  if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+  let y = m[3] ? (m[3].length === 2 ? 2000 + +m[3] : +m[3]) : +today.slice(0, 4);
+  let iso = `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  if (!m[3] && iso > today) iso = `${y - 1}${iso.slice(4)}`;
+  return iso;
+}
+function matchPlayer(name) {
+  const n = name.trim().toLowerCase();
+  if (!n) return null;
+  const exact = data.players.filter(p => p.name.toLowerCase() === n);
+  if (exact.length === 1) return exact[0];
+  const pre = data.players.filter(p => p.name.toLowerCase().startsWith(n) || n.startsWith(p.name.toLowerCase()));
+  return pre.length === 1 ? pre[0] : null;
+}
+function parseBulk(text) {
+  const rows = [];
+  let curDate = null;
+  text.split(/\r?\n/).forEach((raw, li) => {
+    let line = raw.trim();
+    if (!line) return;
+    const first = line.split(/[\s,]+/)[0];
+    const d = parseDateToken(first);
+    if (d) { curDate = d; line = line.slice(first.length); }
+    const re = /([A-Za-z][A-Za-z'.]*(?:\s+[A-Za-z][A-Za-z'.]*)?)\s*[:=\-–,]?\s*(\d{1,4})\b/g;
+    let m, found = false;
+    while ((m = re.exec(line))) {
+      found = true;
+      const p = matchPlayer(m[1]); const total = +m[2];
+      const err = !curDate ? 'No date yet' : !p ? `Unknown player “${m[1]}”` : total > MAX_DAY ? 'Over 1,000' : curDate > todayET() ? 'Future date' : null;
+      rows.push({ line: li + 1, date: curDate, player: p, name: m[1], total, err });
+    }
+    if (!found && !d) rows.push({ line: li + 1, err: `Couldn’t read “${raw.trim().slice(0, 40)}”` });
+  });
+  rows.forEach(r => {
+    if (r.err) return;
+    const ex = data.games.find(g => !g.demo && g.player === r.player.id && g.date === r.date);
+    r.status = ex ? (gTotal(ex) === r.total ? 'same' : 'replace') : 'new';
+  });
+  return rows;
+}
+let bulkRows = [];
+function renderBulkPreview() {
+  bulkRows = parseBulk($('#bulkText').value);
+  const ok = bulkRows.filter(r => !r.err && r.status !== 'same');
+  const errs = bulkRows.filter(r => r.err);
+  $('#bulkPreview').innerHTML = bulkRows.length ? `<table class="bulk-table"><thead><tr><th>Date</th><th style="text-align:left">Player</th><th>Total</th><th style="text-align:left">Status</th></tr></thead><tbody>${
+    bulkRows.map(r => r.err
+      ? `<tr class="bad"><td>${r.date ? prettyDate(r.date, { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}</td><td style="text-align:left">${esc(r.name || '')}</td><td>${r.total ?? ''}</td><td style="text-align:left">⚠ ${esc(r.err)} (line ${r.line})</td></tr>`
+      : `<tr><td>${prettyDate(r.date, { month: 'short', day: 'numeric', year: 'numeric' })}</td><td style="text-align:left"><span class="pname"><span class="swatch" style="background:${playerColor(r.player.id)}"></span>${esc(r.player.name)}</span></td><td>${fmt(r.total)}</td><td style="text-align:left" class="${r.status === 'replace' ? 'warn' : 'muted'}">${r.status === 'new' ? 'New' : r.status === 'replace' ? 'Replaces existing' : 'Already saved'}</td></tr>`).join('')
+  }</tbody></table>` : '';
+  $('#bulkImport').disabled = !ok.length;
+  $('#bulkImport').textContent = ok.length ? `Import ${ok.length} score${ok.length === 1 ? '' : 's'}` : 'Import';
+  $('#bulkMsg').textContent = errs.length ? `${errs.length} line${errs.length === 1 ? '' : 's'} with problems will be skipped.` : '';
+}
+function openBulk() {
+  if (!isAdmin()) return;
+  $('#bulkText').value = store.get('gst-bulk-draft', '');
+  renderBulkPreview();
+  $('#bulkDlg').showModal();
+  setTimeout(() => $('#bulkText').focus(), 50);
+}
+function doBulkImport() {
+  const ok = bulkRows.filter(r => !r.err && r.status !== 'same');
+  if (!ok.length) return;
+  const hadDemo = data.games.some(g => g.demo);
+  data.games = data.games.filter(g => !g.demo);
+  ok.forEach(r => {
+    const ex = data.games.find(g => g.player === r.player.id && g.date === r.date);
+    if (ex) { delete ex.q; ex.total = r.total; } else data.games.push({ id: uid(), date: r.date, player: r.player.id, total: r.total });
+  });
+  store.del('gst-bulk-draft');
+  $('#bulkDlg').close();
+  save();
+  toast(`Imported ${ok.length} score${ok.length === 1 ? '' : 's'}${hadDemo ? ' · demo data cleared' : ''}`);
 }
 
 /* ---------- settings ---------- */
@@ -699,6 +812,12 @@ function init() {
   buildQInputs();
 
   $('#addBtn').onclick = () => openAdd();
+  $('#bulkBtn').onclick = openBulk;
+  $('#bulkBtn2').onclick = () => { $('#setDlg').close(); openBulk(); };
+  $('#bulkText').addEventListener('input', () => { store.set('gst-bulk-draft', $('#bulkText').value); renderBulkPreview(); });
+  $('#bulkImport').onclick = doBulkImport;
+  $('#modeSeg').onclick = e => { const m = e.target.dataset.mode; if (m) { setEntryMode(m); (m === 'q' ? document.querySelector('#qInputs input') : $('#fTotalIn')).focus(); } };
+  $('#fTotalIn').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#saveScore').click(); } });
   $('#emptyAdd').onclick = () => openAdd();
   $('#settingsBtn').onclick = openSettings;
   $('#themeBtn').onclick = toggleTheme;

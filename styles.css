@@ -339,3 +339,14 @@ body.viewer .admin-only { display: none !important; }
 .admin-access { background: var(--surface-2); border-radius: 12px; padding: 14px; margin-bottom: 6px; }
 .admin-access input { background: var(--surface); }
 body.admin .admin-access { background: transparent; padding: 0; }
+.mode-seg { margin-top: 12px; width: 100%; }
+.mode-seg button { flex: 1; }
+#totalMode { margin-top: 12px; }
+#totalMode input { font-size: 22px; font-weight: 700; text-align: center; padding: 10px; }
+#bulkText { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; }
+.bulk-preview { max-height: 260px; overflow: auto; margin-top: 10px; }
+.bulk-table { font-size: 13px; }
+.bulk-table th, .bulk-table td { padding: 6px 8px; }
+.bulk-table tr.bad td { color: var(--bad); }
+.bulk-table .warn { color: #b77900; font-weight: 600; }
+@media (max-width: 560px) { #bulkBtn { display: none; } }
