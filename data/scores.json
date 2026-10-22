@@ -1,10 +1,19 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-21T18:54:18.000Z",
+  "updatedAt": "2026-10-22T18:19:33.284Z",
   "players": [
-    { "id": "pedro", "name": "Pedro" },
-    { "id": "kaner", "name": "Kaner" },
-    { "id": "mitchell", "name": "Mitchell" }
+    {
+      "id": "pedro",
+      "name": "Pedro"
+    },
+    {
+      "id": "kaner",
+      "name": "Kaner"
+    },
+    {
+      "id": "mitchell",
+      "name": "Mitchell"
+    }
   ],
   "games": []
 }
