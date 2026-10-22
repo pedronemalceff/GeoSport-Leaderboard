@@ -205,7 +205,7 @@ function render() {
 
 function renderPodium(games) {
   const label = { 7: 'Last 7 days', 30: 'Last 30 days', 90: 'Last 90 days', all: 'All time' }[range];
-  $('#podiumNote').textContent = `${label} · total points`;
+  $('#podiumNote').textContent = `${label} · total points · days all 3 played`;
   const rows = playerStats(games).sort((a, b) => b.total - a.total || b.avg - a.avg || data.players.indexOf(a.p) - data.players.indexOf(b.p)).slice(0, 3);
   const medals = ['🥇', '🥈', '🥉'];
   const leader = rows[0]?.total || 0;
@@ -375,7 +375,7 @@ function renderWins(games) {
     x: { ...opts.scales.y, ticks: { ...opts.scales.y.ticks, precision: 0 } },
     y: { grid: { display: false }, border: { color: css('--axis') }, ticks: { color: css('--ink-2'), font: { size: 12 } } },
   };
-  opts.plugins.tooltip.callbacks = { label: c => ` ${c.parsed.x} wins of ${contested} contested days` };
+  opts.plugins.tooltip.callbacks = { label: c => ` ${c.parsed.x} wins of ${contested} days` };
   mkChart('winsChart', {
     type: 'bar',
     data: { labels: players.map(p => p.name), datasets: [{ data: players.map(p => wins[p.id] || 0),
