@@ -196,8 +196,6 @@ function render() {
   renderLeaderboard(games);
   renderDaily(start, end);
   renderRace(start, end);
-  renderQ(games);
-  renderTiers(games);
   renderWins(games);
   renderH2H(games);
   renderHeat();
@@ -368,22 +366,6 @@ function renderRace(start, end) {
   mkChart('raceChart', { type: 'line', data: { labels: days.map(d => prettyDate(d)), datasets }, options: baseOpts() });
 }
 
-function renderQ(allGames) {
-  const games = allGames.filter(g => g.q);
-  const players = activePlayers(games);
-  $('#qNote').textContent = games.length < allGames.length ? `Games with question scores only (${games.length} of ${allGames.length})` : 'Base score 0–100, before multiplier';
-  const datasets = players.map(p => {
-    const gs = games.filter(g => g.player === p.id);
-    const c = playerColor(p.id);
-    return { label: p.name, data: [0, 1, 2, 3, 4].map(i => Math.round(gs.reduce((s, g) => s + g.q[i], 0) / gs.length)),
-      backgroundColor: c, borderRadius: 4, borderSkipped: 'start', maxBarThickness: 22, categoryPercentage: 0.7, barPercentage: 0.9 };
-  });
-  const opts = baseOpts();
-  opts.scales.y.max = 100;
-  opts.plugins.tooltip.callbacks = { label: c => ` ${c.dataset.label}: ${c.parsed.y} avg (${c.parsed.y * WEIGHTS[c.dataIndex]} weighted)` };
-  mkChart('qChart', { type: 'bar', data: { labels: ['Q1 ×1', 'Q2 ×1', 'Q3 ×2', 'Q4 ×3', 'Q5 ×3'], datasets }, options: opts });
-}
-
 function renderWins(games) {
   const { wins, contested } = dailyWinners(games);
   const players = activePlayers(games).sort((a, b) => (wins[b.id] || 0) - (wins[a.id] || 0));
@@ -400,23 +382,6 @@ function renderWins(games) {
       backgroundColor: players.map(p => playerColor(p.id)), borderRadius: 4, borderSkipped: 'start', maxBarThickness: 26 }] },
     options: opts,
   });
-}
-
-function renderTiers(allGames) {
-  const games = allGames.filter(g => g.q);
-  const players = activePlayers(games);
-  if (!players.length) { $('#tierBars').innerHTML = '<p class="muted small">No games with question scores in this range yet.</p>'; return; }
-  const rows = players.map(p => {
-    const taps = games.filter(g => g.player === p.id).flatMap(g => g.q || []);
-    const counts = TIERS.map(t => taps.filter(t.test).length);
-    const segs = TIERS.map((t, i) => counts[i]
-      ? `<span style="width:${(counts[i] / taps.length) * 100}%;background:${css(t.var)}" title="${t.label}: ${counts[i]} (${Math.round((counts[i] / taps.length) * 100)}%)"></span>` : '').join('');
-    const good = Math.round(((counts[0] + counts[1]) / taps.length) * 100);
-    return `<div class="tier-row"><div class="tier-top"><span class="pname"><span class="swatch" style="background:${playerColor(p.id)}"></span>${esc(p.name)}</span>
-      <span class="muted">${good}% great or better · ${taps.length} taps</span></div><div class="tier-bar">${segs}</div></div>`;
-  }).join('');
-  const legend = `<div class="tier-legend">${TIERS.map(t => `<span><i style="background:${css(t.var)}"></i>${t.label}</span>`).join('')}</div>`;
-  $('#tierBars').innerHTML = rows + legend;
 }
 
 function renderH2H(games) {
