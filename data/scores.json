@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-22T18:20:27.962Z",
+  "updatedAt": "2026-10-22T18:51:44.911Z",
   "players": [
     {
       "id": "pedro",
@@ -21,6 +21,1350 @@
       "date": "2026-07-07",
       "player": "pedro",
       "total": 873
+    },
+    {
+      "id": "pnk2erll",
+      "date": "2026-07-07",
+      "player": "kaner",
+      "total": 836
+    },
+    {
+      "id": "r6rivh7q",
+      "date": "2026-07-07",
+      "player": "mitchell",
+      "total": 837
+    },
+    {
+      "id": "g9ays0tm",
+      "date": "2026-07-09",
+      "player": "pedro",
+      "total": 863
+    },
+    {
+      "id": "xcf5cez0",
+      "date": "2026-07-09",
+      "player": "kaner",
+      "total": 925
+    },
+    {
+      "id": "l28sk244",
+      "date": "2026-07-09",
+      "player": "mitchell",
+      "total": 782
+    },
+    {
+      "id": "9iy1j0ws",
+      "date": "2026-07-10",
+      "player": "kaner",
+      "total": 742
+    },
+    {
+      "id": "4v8pm6cx",
+      "date": "2026-07-10",
+      "player": "pedro",
+      "total": 764
+    },
+    {
+      "id": "pku6ur58",
+      "date": "2026-07-10",
+      "player": "mitchell",
+      "total": 750
+    },
+    {
+      "id": "dty5nzd2",
+      "date": "2026-07-11",
+      "player": "mitchell",
+      "total": 758
+    },
+    {
+      "id": "zmxlkgq6",
+      "date": "2026-07-11",
+      "player": "pedro",
+      "total": 719
+    },
+    {
+      "id": "lrzmrjpm",
+      "date": "2026-07-11",
+      "player": "kaner",
+      "total": 795
+    },
+    {
+      "id": "s3ugtmx2",
+      "date": "2026-07-13",
+      "player": "mitchell",
+      "total": 700
+    },
+    {
+      "id": "28ce51fk",
+      "date": "2026-07-13",
+      "player": "kaner",
+      "total": 941
+    },
+    {
+      "id": "4wyvimjf",
+      "date": "2026-07-13",
+      "player": "pedro",
+      "total": 862
+    },
+    {
+      "id": "kzaf93dk",
+      "date": "2026-07-14",
+      "player": "kaner",
+      "total": 799
+    },
+    {
+      "id": "4vsl4egd",
+      "date": "2026-07-14",
+      "player": "mitchell",
+      "total": 638
+    },
+    {
+      "id": "6ayovs43",
+      "date": "2026-07-14",
+      "player": "pedro",
+      "total": 783
+    },
+    {
+      "id": "u71ig2hq",
+      "date": "2026-07-15",
+      "player": "kaner",
+      "total": 556
+    },
+    {
+      "id": "b9nrqywt",
+      "date": "2026-07-15",
+      "player": "mitchell",
+      "total": 533
+    },
+    {
+      "id": "x0tm31ye",
+      "date": "2026-07-15",
+      "player": "pedro",
+      "total": 666
+    },
+    {
+      "id": "mt5n7he6",
+      "date": "2026-07-17",
+      "player": "pedro",
+      "total": 742
+    },
+    {
+      "id": "0q3t6ps9",
+      "date": "2026-07-17",
+      "player": "mitchell",
+      "total": 716
+    },
+    {
+      "id": "vpnsfq1p",
+      "date": "2026-07-17",
+      "player": "kaner",
+      "total": 839
+    },
+    {
+      "id": "yqlnkzwx",
+      "date": "2026-07-18",
+      "player": "pedro",
+      "total": 940
+    },
+    {
+      "id": "wcjau9j0",
+      "date": "2026-07-18",
+      "player": "kaner",
+      "total": 968
+    },
+    {
+      "id": "cum8xgmj",
+      "date": "2026-07-18",
+      "player": "mitchell",
+      "total": 906
+    },
+    {
+      "id": "gv4v12nm",
+      "date": "2026-07-20",
+      "player": "kaner",
+      "total": 765
+    },
+    {
+      "id": "4tjfoike",
+      "date": "2026-07-20",
+      "player": "mitchell",
+      "total": 758
+    },
+    {
+      "id": "lkbqjff9",
+      "date": "2026-07-20",
+      "player": "pedro",
+      "total": 557
+    },
+    {
+      "id": "nhhv1jps",
+      "date": "2026-07-21",
+      "player": "kaner",
+      "total": 941
+    },
+    {
+      "id": "uzyjvc68",
+      "date": "2026-07-21",
+      "player": "pedro",
+      "total": 848
+    },
+    {
+      "id": "fk9pg419",
+      "date": "2026-07-21",
+      "player": "mitchell",
+      "total": 915
+    },
+    {
+      "id": "hp9xawe2",
+      "date": "2026-07-22",
+      "player": "kaner",
+      "total": 847
+    },
+    {
+      "id": "n5p1oych",
+      "date": "2026-07-22",
+      "player": "pedro",
+      "total": 903
+    },
+    {
+      "id": "14sj54dv",
+      "date": "2026-07-22",
+      "player": "mitchell",
+      "total": 845
+    },
+    {
+      "id": "633voxbb",
+      "date": "2026-07-23",
+      "player": "kaner",
+      "total": 667
+    },
+    {
+      "id": "lnhl064p",
+      "date": "2026-07-23",
+      "player": "pedro",
+      "total": 723
+    },
+    {
+      "id": "jdhnfskf",
+      "date": "2026-07-23",
+      "player": "mitchell",
+      "total": 646
+    },
+    {
+      "id": "z7jbn70f",
+      "date": "2026-07-24",
+      "player": "mitchell",
+      "total": 735
+    },
+    {
+      "id": "xbzfwwv5",
+      "date": "2026-07-24",
+      "player": "kaner",
+      "total": 874
+    },
+    {
+      "id": "p5b5aqkq",
+      "date": "2026-07-24",
+      "player": "pedro",
+      "total": 866
+    },
+    {
+      "id": "ychf262m",
+      "date": "2026-07-28",
+      "player": "kaner",
+      "total": 696
+    },
+    {
+      "id": "ad3vg27n",
+      "date": "2026-07-28",
+      "player": "mitchell",
+      "total": 684
+    },
+    {
+      "id": "v841088o",
+      "date": "2026-07-28",
+      "player": "pedro",
+      "total": 747
+    },
+    {
+      "id": "0v114h6u",
+      "date": "2026-07-29",
+      "player": "pedro",
+      "total": 831
+    },
+    {
+      "id": "wi987ldb",
+      "date": "2026-07-29",
+      "player": "mitchell",
+      "total": 572
+    },
+    {
+      "id": "18bnji89",
+      "date": "2026-07-29",
+      "player": "kaner",
+      "total": 866
+    },
+    {
+      "id": "8y7m9otx",
+      "date": "2026-07-30",
+      "player": "kaner",
+      "total": 976
+    },
+    {
+      "id": "y7itb8jg",
+      "date": "2026-07-30",
+      "player": "pedro",
+      "total": 901
+    },
+    {
+      "id": "1eriwjsr",
+      "date": "2026-07-30",
+      "player": "mitchell",
+      "total": 766
+    },
+    {
+      "id": "e8fvjkre",
+      "date": "2026-07-31",
+      "player": "pedro",
+      "total": 648
+    },
+    {
+      "id": "ufk8hueu",
+      "date": "2026-07-31",
+      "player": "kaner",
+      "total": 812
+    },
+    {
+      "id": "wy97jnsr",
+      "date": "2026-07-31",
+      "player": "mitchell",
+      "total": 730
+    },
+    {
+      "id": "ji0ltxqk",
+      "date": "2026-08-02",
+      "player": "mitchell",
+      "total": 866
+    },
+    {
+      "id": "frrdzxey",
+      "date": "2026-08-02",
+      "player": "kaner",
+      "total": 979
+    },
+    {
+      "id": "j0mqotq1",
+      "date": "2026-08-02",
+      "player": "pedro",
+      "total": 960
+    },
+    {
+      "id": "n7omhmce",
+      "date": "2026-08-04",
+      "player": "kaner",
+      "total": 872
+    },
+    {
+      "id": "5anacrkd",
+      "date": "2026-08-04",
+      "player": "mitchell",
+      "total": 905
+    },
+    {
+      "id": "9udl1jr5",
+      "date": "2026-08-04",
+      "player": "pedro",
+      "total": 915
+    },
+    {
+      "id": "ja3vobyw",
+      "date": "2026-08-05",
+      "player": "mitchell",
+      "total": 919
+    },
+    {
+      "id": "fia9r36k",
+      "date": "2026-08-05",
+      "player": "pedro",
+      "total": 691
+    },
+    {
+      "id": "hgxskelx",
+      "date": "2026-08-05",
+      "player": "kaner",
+      "total": 712
+    },
+    {
+      "id": "klu9wewd",
+      "date": "2026-08-06",
+      "player": "kaner",
+      "total": 660
+    },
+    {
+      "id": "847f3j90",
+      "date": "2026-08-06",
+      "player": "mitchell",
+      "total": 694
+    },
+    {
+      "id": "zrftal05",
+      "date": "2026-08-06",
+      "player": "pedro",
+      "total": 691
+    },
+    {
+      "id": "wmhzfo3f",
+      "date": "2026-08-07",
+      "player": "kaner",
+      "total": 909
+    },
+    {
+      "id": "xrsq7oho",
+      "date": "2026-08-07",
+      "player": "mitchell",
+      "total": 746
+    },
+    {
+      "id": "q7awgfav",
+      "date": "2026-08-07",
+      "player": "pedro",
+      "total": 805
+    },
+    {
+      "id": "0va4765h",
+      "date": "2026-08-09",
+      "player": "kaner",
+      "total": 742
+    },
+    {
+      "id": "bogurabo",
+      "date": "2026-08-09",
+      "player": "mitchell",
+      "total": 811
+    },
+    {
+      "id": "xc55nmts",
+      "date": "2026-08-09",
+      "player": "pedro",
+      "total": 570
+    },
+    {
+      "id": "c8q3p8ve",
+      "date": "2026-08-10",
+      "player": "pedro",
+      "total": 765
+    },
+    {
+      "id": "a1cuzbnp",
+      "date": "2026-08-10",
+      "player": "kaner",
+      "total": 769
+    },
+    {
+      "id": "cc3tf8o9",
+      "date": "2026-08-10",
+      "player": "mitchell",
+      "total": 767
+    },
+    {
+      "id": "xs6b94a8",
+      "date": "2026-08-11",
+      "player": "pedro",
+      "total": 694
+    },
+    {
+      "id": "wyr9yksy",
+      "date": "2026-08-11",
+      "player": "kaner",
+      "total": 733
+    },
+    {
+      "id": "s14gddae",
+      "date": "2026-08-11",
+      "player": "mitchell",
+      "total": 714
+    },
+    {
+      "id": "7k35dr5u",
+      "date": "2026-08-12",
+      "player": "kaner",
+      "total": 952
+    },
+    {
+      "id": "yj4tlrek",
+      "date": "2026-08-12",
+      "player": "mitchell",
+      "total": 780
+    },
+    {
+      "id": "jdn8z7l6",
+      "date": "2026-08-12",
+      "player": "pedro",
+      "total": 742
+    },
+    {
+      "id": "abyulyx7",
+      "date": "2026-08-13",
+      "player": "kaner",
+      "total": 867
+    },
+    {
+      "id": "sn4wxhn0",
+      "date": "2026-08-13",
+      "player": "mitchell",
+      "total": 757
+    },
+    {
+      "id": "5z4jgmkv",
+      "date": "2026-08-13",
+      "player": "pedro",
+      "total": 903
+    },
+    {
+      "id": "szzl88ax",
+      "date": "2026-08-14",
+      "player": "kaner",
+      "total": 926
+    },
+    {
+      "id": "nt426561",
+      "date": "2026-08-14",
+      "player": "mitchell",
+      "total": 784
+    },
+    {
+      "id": "uxysd282",
+      "date": "2026-08-14",
+      "player": "pedro",
+      "total": 696
+    },
+    {
+      "id": "obol4y4u",
+      "date": "2026-08-16",
+      "player": "pedro",
+      "total": 781
+    },
+    {
+      "id": "1vssdbnn",
+      "date": "2026-08-16",
+      "player": "mitchell",
+      "total": 522
+    },
+    {
+      "id": "hvodkv8d",
+      "date": "2026-08-16",
+      "player": "kaner",
+      "total": 795
+    },
+    {
+      "id": "45iqopax",
+      "date": "2026-08-17",
+      "player": "mitchell",
+      "total": 744
+    },
+    {
+      "id": "3yzks0l8",
+      "date": "2026-08-17",
+      "player": "pedro",
+      "total": 691
+    },
+    {
+      "id": "loxblv7s",
+      "date": "2026-08-17",
+      "player": "kaner",
+      "total": 839
+    },
+    {
+      "id": "7jq6ps86",
+      "date": "2026-08-18",
+      "player": "kaner",
+      "total": 834
+    },
+    {
+      "id": "2qb8jv3o",
+      "date": "2026-08-18",
+      "player": "mitchell",
+      "total": 774
+    },
+    {
+      "id": "zha2nx1p",
+      "date": "2026-08-18",
+      "player": "pedro",
+      "total": 948
+    },
+    {
+      "id": "pmnvkylc",
+      "date": "2026-08-19",
+      "player": "kaner",
+      "total": 923
+    },
+    {
+      "id": "u598ryea",
+      "date": "2026-08-19",
+      "player": "mitchell",
+      "total": 709
+    },
+    {
+      "id": "m31fahz4",
+      "date": "2026-08-19",
+      "player": "pedro",
+      "total": 844
+    },
+    {
+      "id": "mq13aku7",
+      "date": "2026-08-20",
+      "player": "kaner",
+      "total": 880
+    },
+    {
+      "id": "fvzbf8or",
+      "date": "2026-08-20",
+      "player": "pedro",
+      "total": 787
+    },
+    {
+      "id": "iut5v121",
+      "date": "2026-08-20",
+      "player": "mitchell",
+      "total": 748
+    },
+    {
+      "id": "k6st4hev",
+      "date": "2026-08-21",
+      "player": "pedro",
+      "total": 731
+    },
+    {
+      "id": "wn43xpep",
+      "date": "2026-08-21",
+      "player": "kaner",
+      "total": 691
+    },
+    {
+      "id": "597t3qjt",
+      "date": "2026-08-21",
+      "player": "mitchell",
+      "total": 672
+    },
+    {
+      "id": "223e02r1",
+      "date": "2026-08-23",
+      "player": "kaner",
+      "total": 636
+    },
+    {
+      "id": "bbhanx1g",
+      "date": "2026-08-23",
+      "player": "mitchell",
+      "total": 670
+    },
+    {
+      "id": "s0cth2ng",
+      "date": "2026-08-23",
+      "player": "pedro",
+      "total": 640
+    },
+    {
+      "id": "s51s3sor",
+      "date": "2026-08-24",
+      "player": "mitchell",
+      "total": 873
+    },
+    {
+      "id": "wt4z63xl",
+      "date": "2026-08-24",
+      "player": "kaner",
+      "total": 841
+    },
+    {
+      "id": "lyf37xz3",
+      "date": "2026-08-24",
+      "player": "pedro",
+      "total": 856
+    },
+    {
+      "id": "nbabox39",
+      "date": "2026-08-25",
+      "player": "kaner",
+      "total": 953
+    },
+    {
+      "id": "pwcgc6y7",
+      "date": "2026-08-25",
+      "player": "mitchell",
+      "total": 896
+    },
+    {
+      "id": "lflpnh5w",
+      "date": "2026-08-25",
+      "player": "pedro",
+      "total": 835
+    },
+    {
+      "id": "jtkv8n9x",
+      "date": "2026-08-26",
+      "player": "kaner",
+      "total": 795
+    },
+    {
+      "id": "uhgxbm5m",
+      "date": "2026-08-26",
+      "player": "mitchell",
+      "total": 774
+    },
+    {
+      "id": "c7tjqd2k",
+      "date": "2026-08-26",
+      "player": "pedro",
+      "total": 838
+    },
+    {
+      "id": "3a1et2o4",
+      "date": "2026-08-27",
+      "player": "pedro",
+      "total": 891
+    },
+    {
+      "id": "rns9bu0j",
+      "date": "2026-08-27",
+      "player": "mitchell",
+      "total": 662
+    },
+    {
+      "id": "01ovxepf",
+      "date": "2026-08-27",
+      "player": "kaner",
+      "total": 915
+    },
+    {
+      "id": "fiv8no6e",
+      "date": "2026-08-28",
+      "player": "kaner",
+      "total": 820
+    },
+    {
+      "id": "650g9a6t",
+      "date": "2026-08-28",
+      "player": "mitchell",
+      "total": 760
+    },
+    {
+      "id": "iwe45k8t",
+      "date": "2026-08-28",
+      "player": "pedro",
+      "total": 804
+    },
+    {
+      "id": "c1ery0pi",
+      "date": "2026-08-29",
+      "player": "kaner",
+      "total": 940
+    },
+    {
+      "id": "u99ktnyn",
+      "date": "2026-08-29",
+      "player": "mitchell",
+      "total": 743
+    },
+    {
+      "id": "m29setly",
+      "date": "2026-08-29",
+      "player": "pedro",
+      "total": 766
+    },
+    {
+      "id": "tze5oib5",
+      "date": "2026-08-30",
+      "player": "mitchell",
+      "total": 715
+    },
+    {
+      "id": "7is10uxz",
+      "date": "2026-08-30",
+      "player": "kaner",
+      "total": 771
+    },
+    {
+      "id": "w27nz2ky",
+      "date": "2026-08-30",
+      "player": "pedro",
+      "total": 771
+    },
+    {
+      "id": "ru4xnd3z",
+      "date": "2026-08-31",
+      "player": "kaner",
+      "total": 768
+    },
+    {
+      "id": "rs1ftleu",
+      "date": "2026-08-31",
+      "player": "mitchell",
+      "total": 710
+    },
+    {
+      "id": "zdfyixi7",
+      "date": "2026-08-31",
+      "player": "pedro",
+      "total": 684
+    },
+    {
+      "id": "00imba5w",
+      "date": "2026-09-01",
+      "player": "pedro",
+      "total": 895
+    },
+    {
+      "id": "i6obap6m",
+      "date": "2026-09-01",
+      "player": "mitchell",
+      "total": 875
+    },
+    {
+      "id": "nz9ex0ca",
+      "date": "2026-09-01",
+      "player": "kaner",
+      "total": 860
+    },
+    {
+      "id": "x63xhatl",
+      "date": "2026-09-02",
+      "player": "kaner",
+      "total": 851
+    },
+    {
+      "id": "taw51vn2",
+      "date": "2026-09-02",
+      "player": "pedro",
+      "total": 902
+    },
+    {
+      "id": "xcdfujuw",
+      "date": "2026-09-02",
+      "player": "mitchell",
+      "total": 817
+    },
+    {
+      "id": "k4ii4djy",
+      "date": "2026-09-03",
+      "player": "pedro",
+      "total": 854
+    },
+    {
+      "id": "ryd7ii3b",
+      "date": "2026-09-03",
+      "player": "mitchell",
+      "total": 709
+    },
+    {
+      "id": "d16ay1mm",
+      "date": "2026-09-03",
+      "player": "kaner",
+      "total": 809
+    },
+    {
+      "id": "q9l5i2yw",
+      "date": "2026-09-06",
+      "player": "mitchell",
+      "total": 824
+    },
+    {
+      "id": "24tu2s4h",
+      "date": "2026-09-06",
+      "player": "pedro",
+      "total": 871
+    },
+    {
+      "id": "wj89bwne",
+      "date": "2026-09-06",
+      "player": "kaner",
+      "total": 866
+    },
+    {
+      "id": "q0j5xi8i",
+      "date": "2026-09-09",
+      "player": "pedro",
+      "total": 907
+    },
+    {
+      "id": "rf2q7yqg",
+      "date": "2026-09-09",
+      "player": "kaner",
+      "total": 985
+    },
+    {
+      "id": "5xtyudar",
+      "date": "2026-09-09",
+      "player": "mitchell",
+      "total": 906
+    },
+    {
+      "id": "6jhsqds1",
+      "date": "2026-09-10",
+      "player": "kaner",
+      "total": 891
+    },
+    {
+      "id": "o01nrryt",
+      "date": "2026-09-10",
+      "player": "mitchell",
+      "total": 798
+    },
+    {
+      "id": "z2214xuc",
+      "date": "2026-09-10",
+      "player": "pedro",
+      "total": 812
+    },
+    {
+      "id": "dz6hxoev",
+      "date": "2026-09-11",
+      "player": "kaner",
+      "total": 801
+    },
+    {
+      "id": "pehrnux2",
+      "date": "2026-09-11",
+      "player": "mitchell",
+      "total": 669
+    },
+    {
+      "id": "6zz1bmu3",
+      "date": "2026-09-11",
+      "player": "pedro",
+      "total": 925
+    },
+    {
+      "id": "05fe79bb",
+      "date": "2026-09-12",
+      "player": "mitchell",
+      "total": 701
+    },
+    {
+      "id": "s81ajn4d",
+      "date": "2026-09-12",
+      "player": "pedro",
+      "total": 724
+    },
+    {
+      "id": "vku6il9w",
+      "date": "2026-09-12",
+      "player": "kaner",
+      "total": 894
+    },
+    {
+      "id": "gn284gvn",
+      "date": "2026-09-15",
+      "player": "kaner",
+      "total": 928
+    },
+    {
+      "id": "o8xyz6na",
+      "date": "2026-09-15",
+      "player": "pedro",
+      "total": 913
+    },
+    {
+      "id": "9ena62vn",
+      "date": "2026-09-15",
+      "player": "mitchell",
+      "total": 875
+    },
+    {
+      "id": "ylz94q31",
+      "date": "2026-09-16",
+      "player": "pedro",
+      "total": 875
+    },
+    {
+      "id": "ve5rjlgb",
+      "date": "2026-09-16",
+      "player": "kaner",
+      "total": 852
+    },
+    {
+      "id": "5aut9tx3",
+      "date": "2026-09-16",
+      "player": "mitchell",
+      "total": 709
+    },
+    {
+      "id": "ozxdrc3g",
+      "date": "2026-09-18",
+      "player": "pedro",
+      "total": 755
+    },
+    {
+      "id": "2sdtfexn",
+      "date": "2026-09-18",
+      "player": "mitchell",
+      "total": 867
+    },
+    {
+      "id": "xayijnaq",
+      "date": "2026-09-18",
+      "player": "kaner",
+      "total": 889
+    },
+    {
+      "id": "r8pkqi19",
+      "date": "2026-09-21",
+      "player": "pedro",
+      "total": 843
+    },
+    {
+      "id": "jtbnhzqp",
+      "date": "2026-09-21",
+      "player": "kaner",
+      "total": 887
+    },
+    {
+      "id": "qg6ou0a1",
+      "date": "2026-09-21",
+      "player": "mitchell",
+      "total": 769
+    },
+    {
+      "id": "kqwpi6vq",
+      "date": "2026-09-24",
+      "player": "mitchell",
+      "total": 933
+    },
+    {
+      "id": "tt0g7qi0",
+      "date": "2026-09-24",
+      "player": "kaner",
+      "total": 915
+    },
+    {
+      "id": "robjolee",
+      "date": "2026-09-24",
+      "player": "pedro",
+      "total": 994
+    },
+    {
+      "id": "qzes6ih1",
+      "date": "2026-09-25",
+      "player": "kaner",
+      "total": 868
+    },
+    {
+      "id": "te8v1wpg",
+      "date": "2026-09-25",
+      "player": "pedro",
+      "total": 891
+    },
+    {
+      "id": "7so1oab2",
+      "date": "2026-09-25",
+      "player": "mitchell",
+      "total": 923
+    },
+    {
+      "id": "h639jloz",
+      "date": "2026-09-28",
+      "player": "mitchell",
+      "total": 780
+    },
+    {
+      "id": "3xm7qvq8",
+      "date": "2026-09-28",
+      "player": "kaner",
+      "total": 934
+    },
+    {
+      "id": "ywymt1ns",
+      "date": "2026-09-28",
+      "player": "pedro",
+      "total": 843
+    },
+    {
+      "id": "3czxt1ho",
+      "date": "2026-09-30",
+      "player": "pedro",
+      "total": 632
+    },
+    {
+      "id": "gzu1anui",
+      "date": "2026-09-30",
+      "player": "kaner",
+      "total": 740
+    },
+    {
+      "id": "ohvpvw9s",
+      "date": "2026-09-30",
+      "player": "mitchell",
+      "total": 698
+    },
+    {
+      "id": "f5zjql7r",
+      "date": "2026-10-01",
+      "player": "pedro",
+      "total": 735
+    },
+    {
+      "id": "tioih786",
+      "date": "2026-10-01",
+      "player": "kaner",
+      "total": 791
+    },
+    {
+      "id": "mq9r1v0l",
+      "date": "2026-10-01",
+      "player": "mitchell",
+      "total": 721
+    },
+    {
+      "id": "g20m0le6",
+      "date": "2026-10-02",
+      "player": "mitchell",
+      "total": 716
+    },
+    {
+      "id": "4qx3vl64",
+      "date": "2026-10-02",
+      "player": "kaner",
+      "total": 708
+    },
+    {
+      "id": "4hfo356j",
+      "date": "2026-10-02",
+      "player": "pedro",
+      "total": 902
+    },
+    {
+      "id": "2bu14loj",
+      "date": "2026-10-03",
+      "player": "mitchell",
+      "total": 944
+    },
+    {
+      "id": "i6jaxofr",
+      "date": "2026-10-03",
+      "player": "kaner",
+      "total": 921
+    },
+    {
+      "id": "irvu82og",
+      "date": "2026-10-03",
+      "player": "pedro",
+      "total": 968
+    },
+    {
+      "id": "3ya3afec",
+      "date": "2026-10-04",
+      "player": "pedro",
+      "total": 943
+    },
+    {
+      "id": "1mlsx2xi",
+      "date": "2026-10-04",
+      "player": "kaner",
+      "total": 972
+    },
+    {
+      "id": "9uq81d75",
+      "date": "2026-10-04",
+      "player": "mitchell",
+      "total": 804
+    },
+    {
+      "id": "hpe8rt47",
+      "date": "2026-10-05",
+      "player": "kaner",
+      "total": 949
+    },
+    {
+      "id": "k9z9s4rn",
+      "date": "2026-10-05",
+      "player": "mitchell",
+      "total": 900
+    },
+    {
+      "id": "gv2x0ubt",
+      "date": "2026-10-05",
+      "player": "pedro",
+      "total": 880
+    },
+    {
+      "id": "5qkus5y1",
+      "date": "2026-10-06",
+      "player": "mitchell",
+      "total": 698
+    },
+    {
+      "id": "dvjh7w37",
+      "date": "2026-10-06",
+      "player": "kaner",
+      "total": 909
+    },
+    {
+      "id": "d27bpb13",
+      "date": "2026-10-06",
+      "player": "pedro",
+      "total": 988
+    },
+    {
+      "id": "4eut7sew",
+      "date": "2026-10-07",
+      "player": "mitchell",
+      "total": 720
+    },
+    {
+      "id": "sndr7mv8",
+      "date": "2026-10-07",
+      "player": "kaner",
+      "total": 927
+    },
+    {
+      "id": "zh0wgohs",
+      "date": "2026-10-07",
+      "player": "pedro",
+      "total": 752
+    },
+    {
+      "id": "4qlj33a4",
+      "date": "2026-10-08",
+      "player": "pedro",
+      "total": 696
+    },
+    {
+      "id": "56p7pnre",
+      "date": "2026-10-08",
+      "player": "kaner",
+      "total": 872
+    },
+    {
+      "id": "f7elzzcu",
+      "date": "2026-10-08",
+      "player": "mitchell",
+      "total": 779
+    },
+    {
+      "id": "c2y8q77w",
+      "date": "2026-10-09",
+      "player": "kaner",
+      "total": 767
+    },
+    {
+      "id": "m7z6alh9",
+      "date": "2026-10-09",
+      "player": "mitchell",
+      "total": 906
+    },
+    {
+      "id": "0i5fhwxd",
+      "date": "2026-10-09",
+      "player": "pedro",
+      "total": 892
+    },
+    {
+      "id": "pfgukfw9",
+      "date": "2026-10-12",
+      "player": "mitchell",
+      "total": 579
+    },
+    {
+      "id": "io2khp6g",
+      "date": "2026-10-12",
+      "player": "kaner",
+      "total": 585
+    },
+    {
+      "id": "t4fd5568",
+      "date": "2026-10-12",
+      "player": "pedro",
+      "total": 604
+    },
+    {
+      "id": "vwemhk2a",
+      "date": "2026-10-14",
+      "player": "kaner",
+      "total": 741
+    },
+    {
+      "id": "pr07ro2a",
+      "date": "2026-10-14",
+      "player": "mitchell",
+      "total": 819
+    },
+    {
+      "id": "xi7k6zba",
+      "date": "2026-10-14",
+      "player": "pedro",
+      "total": 727
+    },
+    {
+      "id": "ek0ky3vh",
+      "date": "2026-10-15",
+      "player": "pedro",
+      "total": 735
+    },
+    {
+      "id": "70eo92y6",
+      "date": "2026-10-15",
+      "player": "mitchell",
+      "total": 662
+    },
+    {
+      "id": "ne66og7o",
+      "date": "2026-10-15",
+      "player": "kaner",
+      "total": 803
+    },
+    {
+      "id": "yto52zlx",
+      "date": "2026-10-19",
+      "player": "mitchell",
+      "total": 868
+    },
+    {
+      "id": "2xecvdls",
+      "date": "2026-10-19",
+      "player": "kaner",
+      "total": 837
+    },
+    {
+      "id": "ef8mhnh3",
+      "date": "2026-10-19",
+      "player": "pedro",
+      "total": 880
+    },
+    {
+      "id": "cqn745gq",
+      "date": "2026-10-20",
+      "player": "pedro",
+      "total": 929
+    },
+    {
+      "id": "gw59tqgn",
+      "date": "2026-10-20",
+      "player": "kaner",
+      "total": 934
+    },
+    {
+      "id": "luyizahc",
+      "date": "2026-10-20",
+      "player": "mitchell",
+      "total": 752
+    },
+    {
+      "id": "qatqpgqo",
+      "date": "2026-10-21",
+      "player": "mitchell",
+      "total": 920
+    },
+    {
+      "id": "bdu4h7w7",
+      "date": "2026-10-21",
+      "player": "pedro",
+      "total": 924
+    },
+    {
+      "id": "1oap7u80",
+      "date": "2026-10-21",
+      "player": "kaner",
+      "total": 882
     }
   ]
 }
