@@ -335,3 +335,7 @@ input:focus, textarea:focus, .sel:focus { outline: 2px solid color-mix(in srgb, 
   color: var(--ink); border-radius: 12px; padding: 10px 14px; font-size: 13.5px;
 }
 .demo-banner .btn { padding: 5px 12px; font-size: 12.5px; }
+body.viewer .admin-only { display: none !important; }
+.admin-access { background: var(--surface-2); border-radius: 12px; padding: 14px; margin-bottom: 6px; }
+.admin-access input { background: var(--surface); }
+body.admin .admin-access { background: transparent; padding: 0; }

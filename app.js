@@ -65,6 +65,7 @@ function normalize(d) {
   return out;
 }
 function save({ push = true } = {}) {
+  if (!isAdmin()) { render(); return; }
   data.updatedAt = new Date().toISOString();
   store.set(LS_DATA, data);
   render();
@@ -84,10 +85,25 @@ async function load() {
     if (r.ok) repo = normalize(await r.json());
   } catch {}
   repoUpdatedAt = repo?.updatedAt || null;
-  const local = store.get(LS_DATA, null);
+  const local = isAdmin() ? store.get(LS_DATA, null) : null; // viewers always see the repo copy
   if (local && (!repo || (local.updatedAt || '') >= (repo.updatedAt || ''))) data = normalize(local);
-  else if (repo) { data = repo; store.set(LS_DATA, data); }
+  else if (repo) { data = repo; if (isAdmin()) store.set(LS_DATA, data); }
   render();
+  if (location.hash === '#admin' && !isAdmin()) openSettings();
+}
+
+/* ---------- admin / viewer mode ---------- */
+function isAdmin() { const g = store.get(LS_GH, {}); return !!(g.token && g.owner && g.repo); }
+function applyMode() {
+  const admin = isAdmin();
+  document.body.classList.toggle('viewer', !admin);
+  document.body.classList.toggle('admin', admin);
+}
+function ghDefaults() {
+  // derive owner/repo from a GitHub Pages URL like owner.github.io/Repo/
+  const m = location.hostname.match(/^([^.]+)\.github\.io$/);
+  const repo = location.pathname.split('/').filter(Boolean)[0];
+  return { owner: m ? m[1] : 'pedronemalceff', repo: m && repo ? repo : 'GeoSport-Leaderboard', branch: 'main' };
 }
 
 /* ---------- derived stats ---------- */
@@ -157,7 +173,7 @@ function render() {
   $('#emptyState').hidden = has;
   $('#dash').hidden = !hasPlayers;
   $('#dash').classList.toggle('only-podium', !has);
-  $('#emptyMsg').textContent = hasPlayers
+  $('#emptyMsg').textContent = !isAdmin() ? 'No scores yet. Check back after today’s round.' : hasPlayers
     ? 'Hit + Add score after today’s round.'
     : 'Add players in Settings, then log your first score. Or load demo data to see the dashboard.';
   $('#demoBanner').hidden = !data.games.some(g => g.demo);
@@ -487,8 +503,8 @@ function renderLog() {
     <td><span class="dots">${g.q.map((s, i) => `<span class="dot" title="Q${i + 1}: ${s}" style="background:${css(tierOf(s).var)}"></span>`).join('')}</span></td>
     <td class="muted">${g.q.join(' · ')}</td>
     <td><strong>${fmt(dayTotal(g.q))}</strong></td>
-    <td><button class="btn ghost icon edit" title="Edit">✎</button><button class="btn ghost icon del" title="Delete">🗑</button></td></tr>`).join('');
-  $('#log').innerHTML = `<thead><tr><th>Date</th><th style="text-align:left">Player</th><th>Taps</th><th>Base scores</th><th>Total</th><th></th></tr></thead><tbody>${rows}</tbody>`;
+    <td class="admin-only"><button class="btn ghost icon edit" title="Edit">✎</button><button class="btn ghost icon del" title="Delete">🗑</button></td></tr>`).join('');
+  $('#log').innerHTML = `<thead><tr><th>Date</th><th style="text-align:left">Player</th><th>Taps</th><th>Base scores</th><th>Total</th><th class="admin-only"></th></tr></thead><tbody>${rows}</tbody>`;
   $('#moreLog').hidden = list.length <= logLimit;
 }
 
@@ -510,6 +526,7 @@ function updateTotal() {
   $('#fTotal').textContent = fmt(dayTotal(q.map(v => v ?? 0)));
 }
 function openAdd(game) {
+  if (!isAdmin()) return;
   if (!data.players.length) { openSettings(); toast('Add a player first'); return; }
   editingId = game?.id || null;
   $('#addTitle').textContent = game ? 'Edit score' : 'Add score';
@@ -563,10 +580,12 @@ function submitScore(e) {
 /* ---------- settings ---------- */
 function openSettings() {
   renderPlayers();
-  const gh = store.get(LS_GH, {});
+  const gh = { ...ghDefaults(), ...store.get(LS_GH, {}) };
   $('#ghOwner').value = gh.owner || ''; $('#ghRepo').value = gh.repo || ''; $('#ghBranch').value = gh.branch || '';
-  $('#ghToken').value = gh.token || ''; $('#ghAuto').checked = !!gh.auto;
+  $('#ghToken').value = gh.token || ''; $('#ghAuto').checked = gh.auto !== false;
   $('#ghMsg').textContent = '';
+  $('#setTitle').textContent = isAdmin() ? 'Settings' : 'Admin unlock';
+  $('#ghConnect').textContent = isAdmin() ? 'Update connection' : 'Connect & unlock';
   if (!$('#setDlg').open) $('#setDlg').showModal();
 }
 function renderPlayers() {
@@ -749,17 +768,38 @@ function init() {
     if (!confirm('Clear all players and scores from this browser?')) return;
     data = emptyData(); save({ push: false }); renderPlayers();
   };
-  $('#ghSave').onclick = () => {
-    store.set(LS_GH, { owner: $('#ghOwner').value.trim(), repo: $('#ghRepo').value.trim(), branch: $('#ghBranch').value.trim(), token: $('#ghToken').value.trim(), auto: $('#ghAuto').checked });
-    $('#ghMsg').textContent = '✓ Saved in this browser.'; $('#ghMsg').className = 'form-msg';
+  const readGh = () => ({ owner: $('#ghOwner').value.trim(), repo: $('#ghRepo').value.trim(), branch: $('#ghBranch').value.trim() || 'main', token: $('#ghToken').value.trim(), auto: $('#ghAuto').checked });
+  $('#ghConnect').onclick = async () => {
+    const cfg = readGh(); const msg = $('#ghMsg');
+    if (!cfg.owner || !cfg.repo || !cfg.token) { msg.textContent = 'Fill in owner, repo and token.'; msg.className = 'form-msg err'; return; }
+    msg.textContent = 'Checking token…'; msg.className = 'form-msg';
+    try {
+      const r = await fetch(`https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}`, { headers: { Authorization: `Bearer ${cfg.token}`, Accept: 'application/vnd.github+json' }, cache: 'no-store' });
+      if (!r.ok) throw new Error(r.status === 401 ? 'Token rejected. Check it was copied fully.' : r.status === 404 ? 'Repo not found, or the token doesn’t have access to it.' : `GitHub ${r.status}`);
+      const info = await r.json();
+      if (!info.permissions?.push) throw new Error('That token can read the repo but can’t write. Give it Contents: Read and write.');
+      const wasAdmin = isAdmin();
+      store.set(LS_GH, cfg);
+      if (!wasAdmin) store.set(LS_DATA, data); // start from the repo copy
+      applyMode(); render(); renderPlayers();
+      $('#setTitle').textContent = 'Settings'; $('#ghConnect').textContent = 'Update connection';
+      msg.textContent = '✓ Unlocked. This browser can now add and edit scores.'; msg.className = 'form-msg';
+      if (location.hash === '#admin') history.replaceState(null, '', location.pathname + location.search);
+    } catch (e) { msg.textContent = e.message; msg.className = 'form-msg err'; }
   };
-  $('#ghAuto').onchange = () => $('#ghSave').click();
-  $('#ghPush').onclick = () => { $('#ghSave').click(); ghPush(false); };
-  $('#ghPull').onclick = () => { $('#ghSave').click(); ghPull(); };
+  $('#ghAuto').onchange = () => { const g = store.get(LS_GH, {}); g.auto = $('#ghAuto').checked; store.set(LS_GH, g); };
+  $('#ghPush').onclick = () => ghPush(false);
+  $('#ghPull').onclick = () => ghPull();
+  $('#ghLock').onclick = () => {
+    if (!confirm('Remove the token and make this browser read-only?')) return;
+    store.del(LS_GH); store.del(LS_DATA); $('#setDlg').close(); applyMode(); load(); toast('Locked. This browser is read-only now.');
+  };
 
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!document.documentElement.dataset.theme) render(); });
   let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => renderBadge(), 150); });
 
+  applyMode();
+  addEventListener('hashchange', () => { if (location.hash === '#admin') openSettings(); });
   load();
 }
 document.addEventListener('DOMContentLoaded', init);
