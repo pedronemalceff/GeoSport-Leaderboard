@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-26T18:08:19.969Z",
+  "updatedAt": "2026-10-26T18:08:26.733Z",
   "players": [
     {
       "id": "pedro",
@@ -1413,6 +1413,12 @@
       "date": "2026-10-26",
       "player": "pedro",
       "total": 762
+    },
+    {
+      "id": "swag3kcq",
+      "date": "2026-10-26",
+      "player": "kaner",
+      "total": 832
     }
   ]
 }
